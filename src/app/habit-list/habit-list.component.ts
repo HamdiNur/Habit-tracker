@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HabitService } from '../habit.service';
-
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-habit-list',
   standalone: true,
-  imports: [CommonModule], // gives us *ngFor, *ngIf
+  imports: [CommonModule, FormsModule], // gives us *ngFor, *ngIf
   template: `
     <div *ngIf="habitService.habits().length === 0" class="empty">
       No habits yet. Add one above to start tracking.
@@ -22,8 +22,20 @@ import { HabitService } from '../habit.service';
           {{ habitService.isDoneToday(habit) ? '✓' : '' }}
         </button>
 
-      <div class="info">
-          <span class="name">{{ habit.name }}</span>
+        <div class="info">
+           <input
+            *ngIf="editingId === habit.id; else nameDisplay"
+            class="name-input"
+            type="text"
+            [(ngModel)]="editingName"
+            (keyup.enter)="saveEdit(habit.id)"
+            (keyup.escape)="cancelEdit()"
+            (blur)="saveEdit(habit.id)"
+          />
+          <ng-template #nameDisplay>
+            <span class="name" (click)="startEdit(habit)">{{ habit.name }}</span>
+            <span class="badge" [class]="'badge-' + habit.category">{{ habit.category }}</span>
+          </ng-template>
           <span class="streak">🔥 {{ habitService.currentStreak(habit) }} day streak</span>
           <div class="week">
             <div
@@ -91,6 +103,20 @@ import { HabitService } from '../habit.service';
       font-size: 14px;
       font-weight: 500;
     }
+      .name {
+      cursor: pointer;
+    }
+    .name-input {
+      font-size: 14px;
+      font-weight: 500;
+      background: var(--surface-hover);
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      color: var(--text);
+      padding: 2px 6px;
+      font-family: inherit;
+      width: 100%;
+    }
     .streak {
       font-size: 12px;
       color: var(--text-dim);
@@ -126,6 +152,18 @@ import { HabitService } from '../habit.service';
     .delete:hover {
       color: var(--danger);
     }
+      .badge {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      width: fit-content;
+      margin-top: 2px;
+    }
+    .badge-Health { background: #1f4d3d; color: #6ee7b7; }
+    .badge-Work { background: #1e3a5f; color: #7dd3fc; }
+    .badge-Personal { background: #4a1f5f; color: #d8b4fe; }
+    .badge-Learning { background: #5f3a1f; color: #fdba74; }
+    .badge-Other { background: #3a3a3a; color: #cbd5e1; }
   `]
 })
 export class HabitListComponent {
@@ -133,4 +171,21 @@ export class HabitListComponent {
   // shared HabitService instance. Both components stay in sync
   // automatically because they're reading/writing the same signal.
   constructor(public habitService: HabitService) {}
+  editingId: string | null = null;
+  editingName = '';
+
+  startEdit(habit: { id: string; name: string }): void {
+    this.editingId = habit.id;
+    this.editingName = habit.name;
+  }
+
+  saveEdit(id: string): void {
+    if (this.editingId === null) return;
+    this.habitService.renameHabit(id, this.editingName);
+    this.editingId = null;
+  }
+
+  cancelEdit(): void {
+    this.editingId = null;
+  }
 }

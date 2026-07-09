@@ -1,23 +1,15 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HabitService } from '../habit.service';
+import { CommonModule } from '@angular/common';
+import { HABIT_CATEGORIES, HabitCategory } from '../habit.model';
 
 @Component({
   selector: 'app-add-habit',
   standalone: true,
-  imports: [FormsModule], // needed for ngModel to work
+    imports: [FormsModule, CommonModule],// needed for ngModel to work
   template: `
     <form class="add-form" (ngSubmit)="submit()">
-      <!--
-        [(ngModel)]="habitName" is Angular's two-way binding syntax
-        (nicknamed "banana in a box" for the [( )] shape).
-        - The [ ] part pushes habitName -> the input's value
-        - The ( ) part listens for input events and pushes the
-          typed value back into habitName
-        In React you'd write value={habitName} and a separate
-        onChange={e => setHabitName(e.target.value)} by hand.
-        Angular does both directions with one binding.
-      -->
       <input
         class="add-input"
         type="text"
@@ -25,6 +17,9 @@ import { HabitService } from '../habit.service';
         [(ngModel)]="habitName"
         name="habitName"
       />
+      <select class="category-select" [(ngModel)]="selectedCategory" name="category">
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
       <button class="add-btn" type="submit">Add</button>
     </form>
   `,
@@ -47,6 +42,14 @@ import { HabitService } from '../habit.service';
     .add-input:focus {
       border-color: var(--accent);
     }
+    .category-select {
+      padding: 10px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 14px;
+    }
     .add-btn {
       padding: 10px 18px;
       border-radius: 8px;
@@ -62,16 +65,14 @@ import { HabitService } from '../habit.service';
   `]
 })
 export class AddHabitComponent {
-  // This plain string is what ngModel reads/writes above.
   habitName = '';
+  categories = HABIT_CATEGORIES;
+  selectedCategory: HabitCategory = 'Health';
 
-  // HabitService is "injected" here via the constructor.
-  // Angular sees the type HabitService and hands over the single
-  // shared instance created by the injector (see habit.service.ts).
   constructor(private habitService: HabitService) {}
 
   submit(): void {
-    this.habitService.addHabit(this.habitName);
-    this.habitName = ''; // clears the input after adding
+    this.habitService.addHabit(this.habitName, this.selectedCategory);
+    this.habitName = '';
   }
 }

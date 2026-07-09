@@ -1,6 +1,16 @@
+export type HabitCategory = 'Health' | 'Work' | 'Personal' | 'Learning' | 'Other';
+
+export const HABIT_CATEGORIES: HabitCategory[] = [
+  'Health',
+  'Work',
+  'Personal',
+  'Learning',
+  'Other'
+];
+
 export interface Habit {
   id: string;
   name: string;
-  // dates (YYYY-MM-DD) on which this habit was marked done
+  category: HabitCategory;
   completedDates: string[];
 }

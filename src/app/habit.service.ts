@@ -30,12 +30,13 @@ export class HabitService {
     this.habits.set(list);
   }
 
-  addHabit(name: string): void {
+addHabit(name: string, category: Habit['category']): void {
     const trimmed = name.trim();
     if (!trimmed) return;
     const newHabit: Habit = {
       id: crypto.randomUUID(),
       name: trimmed,
+      category,
       completedDates: []
     };
     this.save([...this.habits(), newHabit]);
@@ -43,6 +44,14 @@ export class HabitService {
 
   deleteHabit(id: string): void {
     this.save(this.habits().filter((h) => h.id !== id));
+  }
+  renameHabit(id: string, newName: string): void {
+    const trimmed = newName.trim();
+    if (!trimmed) return; // ignore empty names
+    const updated = this.habits().map((h) =>
+      h.id === id ? { ...h, name: trimmed } : h
+    );
+    this.save(updated);
   }
 
   toggleToday(id: string): void {
