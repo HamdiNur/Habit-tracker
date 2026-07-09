@@ -1,0 +1,28 @@
+:root {
+  --bg: #14161a;
+  --surface: #1e2128;
+  --surface-hover: #262a33;
+  --border: #2f3340;
+  --text: #eceef1;
+  --text-dim: #9aa0ab;
+  --accent: #5eead4;
+  --accent-dim: #2c7a70;
+  --danger: #f37272;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
