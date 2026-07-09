@@ -13,4 +13,5 @@ export interface Habit {
   name: string;
   category: HabitCategory;
   completedDates: string[];
+  bestStreak: number;
 }

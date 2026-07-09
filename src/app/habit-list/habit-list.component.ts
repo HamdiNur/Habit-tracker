@@ -37,6 +37,7 @@ import { FormsModule } from '@angular/forms';
             <span class="badge" [class]="'badge-' + habit.category">{{ habit.category }}</span>
           </ng-template>
           <span class="streak">🔥 {{ habitService.currentStreak(habit) }} day streak</span>
+          <span class="best-streak">🏆 Best: {{ habit.bestStreak }} days</span>
           <div class="week">
             <div
               *ngFor="let day of habitService.last7Days(habit)"
@@ -49,9 +50,22 @@ import { FormsModule } from '@angular/forms';
           </div>
         </div>
 
-        <button class="delete" (click)="habitService.deleteHabit(habit.id)" aria-label="Delete habit">
+       <button
+          *ngIf="confirmingDeleteId !== habit.id"
+          class="delete"
+          (click)="confirmingDeleteId = habit.id"
+          aria-label="Delete habit"
+        >
           ✕
         </button>
+        <div *ngIf="confirmingDeleteId === habit.id" class="confirm-delete">
+          <button class="confirm-yes" (click)="habitService.deleteHabit(habit.id); confirmingDeleteId = null">
+            Delete
+          </button>
+          <button class="confirm-no" (click)="confirmingDeleteId = null">
+            Cancel
+          </button>
+        </div>
       </li>
     </ul>
   `,
@@ -152,7 +166,31 @@ import { FormsModule } from '@angular/forms';
     .delete:hover {
       color: var(--danger);
     }
-      .badge {
+      .confirm-delete {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .confirm-yes {
+      background: var(--danger);
+      color: #2a0d0d;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .confirm-no {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .badge {
       font-size: 10px;
       padding: 2px 8px;
       border-radius: 999px;
@@ -173,6 +211,8 @@ export class HabitListComponent {
   constructor(public habitService: HabitService) {}
   editingId: string | null = null;
   editingName = '';
+  confirmingDeleteId: string | null = null;
+
 
   startEdit(habit: { id: string; name: string }): void {
     this.editingId = habit.id;

@@ -37,11 +37,11 @@ addHabit(name: string, category: Habit['category']): void {
       id: crypto.randomUUID(),
       name: trimmed,
       category,
-      completedDates: []
+      completedDates: [],
+      bestStreak: 0
     };
     this.save([...this.habits(), newHabit]);
   }
-
   deleteHabit(id: string): void {
     this.save(this.habits().filter((h) => h.id !== id));
   }
@@ -54,7 +54,7 @@ addHabit(name: string, category: Habit['category']): void {
     this.save(updated);
   }
 
-  toggleToday(id: string): void {
+toggleToday(id: string): void {
     const today = todayStr();
     const updated = this.habits().map((h) => {
       if (h.id !== id) return h;
@@ -62,7 +62,9 @@ addHabit(name: string, category: Habit['category']): void {
       const completedDates = done
         ? h.completedDates.filter((d) => d !== today)
         : [...h.completedDates, today];
-      return { ...h, completedDates };
+      const updatedHabit = { ...h, completedDates };
+      const newStreak = this.currentStreak(updatedHabit);
+      return { ...updatedHabit, bestStreak: Math.max(h.bestStreak, newStreak) };
     });
     this.save(updated);
   }
