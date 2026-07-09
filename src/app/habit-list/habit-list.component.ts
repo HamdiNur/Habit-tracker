@@ -95,7 +95,27 @@ import { HabitService } from '../habit.service';
       font-size: 12px;
       color: var(--text-dim);
     }
-    
+    .week {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .day-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      border: 1px solid var(--border);
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+    }
+    .day-dot.done {
+      background: var(--accent-dim);
+      border-color: var(--accent);
+      color: var(--text);
+    }
     .delete {
       background: transparent;
       border: none;
