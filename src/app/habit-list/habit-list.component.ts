@@ -135,6 +135,10 @@ import { FormsModule } from '@angular/forms';
       font-size: 12px;
       color: var(--text-dim);
     }
+      .best-streak {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
     .week {
       display: flex;
       gap: 4px;
