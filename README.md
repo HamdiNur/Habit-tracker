@@ -1,25 +1,83 @@
-# Habit Tracker (Angular)
+🔥 Habit Tracker
 
-A tiny beginner project: track daily habits, see your streak, stored in your browser's localStorage.
+A simple, beginner-friendly habit tracking app built with Angular. Track daily habits, build streaks, and stay consistent — all data is saved locally in your browser.
 
-## Run it
+🔗 Repo: github.com/HamdiNur/Habit-tracker
 
-```bash
+Features
+
+
+✅ Add habits with a name and category
+☑️ Mark habits done for the day with one click
+🔥 Current streak tracking (consecutive days completed)
+🏆 Best streak — your all-time personal record per habit
+📅 Weekly view — see the last 7 days at a glance
+✏️ Edit habit names inline
+🏷️ Categories — Health, Work, Personal, Learning, Other — each with a color-coded badge
+🗑️ Delete with confirmation — no accidental deletions
+💾 Persistent storage — habits are saved in the browser via localStorage, so they survive a refresh
+
+
+Tech Stack
+
+
+Angular (standalone components, signals)
+TypeScript
+Plain CSS (no external UI library)
+
+
+Getting Started
+
+Prerequisites
+
+
+Node.js v18.13+ (v20 recommended)
+npm (comes with Node)
+
+
+Installation
+
+bashgit clone https://github.com/HamdiNur/Habit-tracker.git
+cd Habit-tracker
 npm install
-npm start
-```
 
-Then open the URL shown in the terminal (usually http://localhost:4200).
+Run locally
 
-## Where to look first
+bashnpm start
 
-- `src/app/habit.service.ts` — the shared data + logic. Look for `@Injectable({ providedIn: 'root' })`, which is Angular's **Dependency Injection**: one instance shared by every component that asks for it.
-- `src/app/add-habit/add-habit.component.ts` — look for `[(ngModel)]="habitName"`. That's **two-way binding**: typing in the input updates `habitName`, and if `habitName` changed elsewhere, the input would update too.
-- `src/app/habit-list/habit-list.component.ts` — renders the list using `*ngFor` and reads from the same injected `HabitService`.
+Then open http://localhost:4200 in your browser.
 
-## Ideas to extend it once it's working
+Project Structure
 
-- Add a weekly calendar view instead of just today's checkbox.
-- Add habit categories or colors.
-- Add a "longest streak ever" stat alongside the current streak.
-- Swap localStorage for a real backend (good intro to Angular's `HttpClient`).
+src/
+├── app/
+│   ├── add-habit/          # Form to add a new habit (name + category)
+│   ├── habit-list/         # Renders habits: checkbox, streaks, edit, delete
+│   ├── habit.model.ts      # Habit + category types
+│   ├── habit.service.ts    # Shared state, streak logic, localStorage
+│   ├── app.component.ts    # Root component
+│   └── app.config.ts       # App-level providers (Dependency Injection)
+├── index.html
+├── main.ts
+└── styles.css
+
+Angular Concepts Used
+
+This project is also a learning exercise. A few core Angular concepts show up throughout:
+
+ConceptWhereDependency InjectionHabitService is @Injectable({ providedIn: 'root' }) — one shared instance injected into every component that needs itTwo-way binding[(ngModel)] in the add-habit form and inline name editingSignalsHabitService.habits is a signal — components re-render automatically when it changesStructural directives*ngFor / *ngIf throughout the habit listStandalone componentsNo NgModule — each component declares its own imports
+
+Roadmap
+
+Planned next steps:
+
+
+ Routing with a dedicated Stats page (total check-ins, best streak overall, breakdown by category)
+ Reactive Forms for the add-habit form
+ Dark/light theme toggle
+ Sync data with Firebase instead of localStorage
+
+
+License
+
+This project is open for learning purposes — feel free to fork and experiment.
